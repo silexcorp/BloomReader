@@ -213,11 +213,6 @@ public class BloomReaderApplication extends Application {
             reportDeviceIdParseSuccess(project, device);
             return true;
         }
-        catch (ExtStorageUnavailableException e){
-            Log.e("Analytics", "Unable to check for deviceId file because external storage is unavailable.");
-            // No toast here, because we could end up here with regular users not even trying to load a device id.
-            return false;
-        }
         catch (JSONException e){
             Log.e("Analytics", "Error processing deviceId file json.");
             Log.e("Analytics", e.getMessage());
@@ -240,17 +235,11 @@ public class BloomReaderApplication extends Application {
         boolean testMode = BuildConfig.DEBUG || BuildConfig.FLAVOR.equals("alpha");
         if(testMode)
             return true;
-        try{
-            File bookDirectory = BookCollection.getLocalBooksDirectory();
-            // We'd really like to just ignore case, but no easy way to do it.
-            return new File(bookDirectory, "UseTestAnalytics").exists()
-                    || new File(bookDirectory, "useTestAnalytics").exists()
-                    || new File(bookDirectory, "usetestanalytics").exists();
-        }
-        catch (ExtStorageUnavailableException e){
-            Log.e("BloomReader/FileIO", e.getStackTrace().toString());
-            return false;
-        }
+        File bookDirectory = BookCollection.getLocalBooksDirectory();
+        // We'd really like to just ignore case, but no easy way to do it.
+        return new File(bookDirectory, "UseTestAnalytics").exists()
+                || new File(bookDirectory, "useTestAnalytics").exists()
+                || new File(bookDirectory, "usetestanalytics").exists();
     }
 
 
